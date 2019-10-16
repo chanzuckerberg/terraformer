@@ -58,13 +58,12 @@ type role struct {
 	IsDefault       sql.NullString `db:"is_default"`
 	IsCurrent       sql.NullString `db:"is_current"`
 	IsInherited     sql.NullString `db:"is_inherited"`
-	AssignedToUsers sql.NullInt32 `db:"assigned_to_users"`
-	GrantedToRoles  sql.NullInt32 `db:"granted_to_roles"`
-	GrantedRoles    sql.NullInt32 `db:"granted_roles"`
+	AssignedToUsers sql.NullInt32  `db:"assigned_to_users"`
+	GrantedToRoles  sql.NullInt32  `db:"granted_to_roles"`
+	GrantedRoles    sql.NullInt32  `db:"granted_roles"`
 	Owner           sql.NullString `db:"owner"`
 	Comment         sql.NullString `db:"comment"`
 }
-
 
 type user struct {
 	Name               sql.NullString `db:"name"`
@@ -129,22 +128,15 @@ func (sc *client) ListDatabaseGrants(database database) ([]databaseGrant, error)
 	return dbGrants, errors.Wrap(err, "unable to scan row for SHOW DATABASES ON DATABASE")
 }
 
-<<<<<<< HEAD
 func (sc *client) ListRoles() ([]role, error) {
 	sdb := sqlx.NewDb(sc.db, "snowflake")
 	stmt := "SHOW ROLES"
-=======
-func (sc *client) ListUsers() ([]user, error) {
-	sdb := sqlx.NewDb(sc.db, "snowflake")
-	stmt := "SHOW USERS"
->>>>>>> 02e92069e36004adfe8dfa725b9f819dcf0c6a58
 	rows, err := sdb.Queryx(stmt)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
 
-<<<<<<< HEAD
 	role := []role{}
 	err = sqlx.StructScan(rows, &role)
 	if err == sql.ErrNoRows {
@@ -152,7 +144,17 @@ func (sc *client) ListUsers() ([]user, error) {
 		return nil, nil
 	}
 	return role, errors.Wrap(err, "unable to scan row for SHOW ROLES")
-=======
+}
+
+func (sc *client) ListUsers() ([]user, error) {
+	sdb := sqlx.NewDb(sc.db, "snowflake")
+	stmt := "SHOW USERS"
+	rows, err := sdb.Queryx(stmt)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
 	user := []user{}
 	err = sqlx.StructScan(rows, &user)
 	if err == sql.ErrNoRows {
@@ -160,5 +162,4 @@ func (sc *client) ListUsers() ([]user, error) {
 		return nil, nil
 	}
 	return user, errors.Wrap(err, "unable to scan row for SHOW USERS")
->>>>>>> 02e92069e36004adfe8dfa725b9f819dcf0c6a58
 }
