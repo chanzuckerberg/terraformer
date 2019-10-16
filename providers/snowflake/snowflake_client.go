@@ -58,11 +58,40 @@ type role struct {
 	IsDefault       sql.NullString `db:"is_default"`
 	IsCurrent       sql.NullString `db:"is_current"`
 	IsInherited     sql.NullString `db:"is_inherited"`
-	AssignedToUsers sql.NullString `db:"assigned_to_users"`
-	GrantedToRoles  sql.NullString `db:"granted_to_roles"`
-	GrantedRoles    sql.NullString `db:"granted_roles"`
+	AssignedToUsers sql.NullInt32 `db:"assigned_to_users"`
+	GrantedToRoles  sql.NullInt32 `db:"granted_to_roles"`
+	GrantedRoles    sql.NullInt32 `db:"granted_roles"`
 	Owner           sql.NullString `db:"owner"`
 	Comment         sql.NullString `db:"comment"`
+}
+
+
+type user struct {
+	Name               sql.NullString `db:"name"`
+	CreatedOn          sql.NullString `db:"created_on"`
+	LoginName          sql.NullString `db:"login_name"`
+	DisplayName        sql.NullString `db:"display_name"`
+	FirstName          sql.NullString `db:"first_name"`
+	LastName           sql.NullString `db:"last_name"`
+	Email              sql.NullString `db:"email"`
+	MinsToUnlock       sql.NullString `db:"mins_to_unlock"`
+	DaysToExpiry       sql.NullString `db:"days_to_expiry"`
+	Comment            sql.NullString `db:"comment"`
+	Disabled           sql.NullString `db:"disabled"`
+	MustChangePassword sql.NullString `db:"must_change_password"`
+	SnowflakeLock      sql.NullString `db:"snowflake_lock"`
+	DefaultWarehouse   sql.NullString `db:"default_warehouse"`
+	DefaultNamespace   sql.NullString `db:"default_namespace"`
+	DefaultRole        sql.NullString `db:"default_role"`
+	ExtAuthnDuo        sql.NullString `db:"ext_authn_duo"`
+	ExtAuthnUid        sql.NullString `db:"ext_authn_uid"`
+	MinsToBypassMfa    sql.NullString `db:"mins_to_bypass_mfa"`
+	Owner              sql.NullString `db:"owner"`
+	LastSuccessLogin   sql.NullString `db:"last_success_login"`
+	ExpiresAtTime      sql.NullString `db:"expires_at_time"`
+	LockedUntilTime    sql.NullString `db:"locked_until_time"`
+	HasPassword        sql.NullString `db:"has_password"`
+	HasRsaPublicKey    sql.NullString `db:"has_rsa_public_key"`
 }
 
 func (sc *client) ListDatabases() ([]database, error) {
@@ -100,15 +129,22 @@ func (sc *client) ListDatabaseGrants(database database) ([]databaseGrant, error)
 	return dbGrants, errors.Wrap(err, "unable to scan row for SHOW DATABASES ON DATABASE")
 }
 
+<<<<<<< HEAD
 func (sc *client) ListRoles() ([]role, error) {
 	sdb := sqlx.NewDb(sc.db, "snowflake")
 	stmt := "SHOW ROLES"
+=======
+func (sc *client) ListUsers() ([]user, error) {
+	sdb := sqlx.NewDb(sc.db, "snowflake")
+	stmt := "SHOW USERS"
+>>>>>>> 02e92069e36004adfe8dfa725b9f819dcf0c6a58
 	rows, err := sdb.Queryx(stmt)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
 
+<<<<<<< HEAD
 	role := []role{}
 	err = sqlx.StructScan(rows, &role)
 	if err == sql.ErrNoRows {
@@ -116,4 +152,13 @@ func (sc *client) ListRoles() ([]role, error) {
 		return nil, nil
 	}
 	return role, errors.Wrap(err, "unable to scan row for SHOW ROLES")
+=======
+	user := []user{}
+	err = sqlx.StructScan(rows, &user)
+	if err == sql.ErrNoRows {
+		log.Printf("[DEBUG] no users found")
+		return nil, nil
+	}
+	return user, errors.Wrap(err, "unable to scan row for SHOW USERS")
+>>>>>>> 02e92069e36004adfe8dfa725b9f819dcf0c6a58
 }

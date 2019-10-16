@@ -78,6 +78,7 @@ func (p *SnowflakeProvider) GetSupportedService() map[string]terraform_utils.Ser
 		"database":       &DatabaseGenerator{},
 		"database_grant": &DatabaseGrantGenerator{},
 		"role":           &RoleGenerator{},
+		"user":           &UserGenerator{},
 	}
 }
 
