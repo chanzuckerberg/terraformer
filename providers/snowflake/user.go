@@ -25,8 +25,8 @@ func (g UserGenerator) createResources(userList []user) []terraform_utils.Resour
 	var resources []terraform_utils.Resource
 	for _, user := range userList {
 		resources = append(resources, terraform_utils.NewSimpleResource(
-			database.DBName.String,
-			database.DBName.String,
+			user.Name.String,
+			user.Name.String,
 			"snowflake_user",
 			"snowflake",
 			[]string{}))
@@ -34,12 +34,12 @@ func (g UserGenerator) createResources(userList []user) []terraform_utils.Resour
 	return resources
 }
 
-func (g *DatabaseGenerator) InitResources() error {
+func (g *UserGenerator) InitResources() error {
 	db, err := g.generateService()
 	if err != nil {
 		return err
 	}
-	output, err := db.ListDatabases()
+	output, err := db.ListUsers()
 	if err != nil {
 		return err
 	}

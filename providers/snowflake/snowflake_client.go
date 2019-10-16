@@ -127,8 +127,8 @@ func (sc *client) ListUsers() ([]user, error) {
 	user := []user{}
 	err = sqlx.StructScan(rows, &user)
 	if err == sql.ErrNoRows {
-		log.Printf("[DEBUG] no databases found")
+		log.Printf("[DEBUG] no users found")
 		return nil, nil
 	}
-	return user, errors.Wrap(err, "unable to scan row for SHOW DATABASES")
+	return user, errors.Wrap(err, "unable to scan row for SHOW USERS")
 }
