@@ -112,8 +112,8 @@ func (sc *client) ListRoles() ([]role, error) {
 	role := []role{}
 	err = sqlx.StructScan(rows, &role)
 	if err == sql.ErrNoRows {
-		log.Printf("[DEBUG] no databases found")
+		log.Printf("[DEBUG] no roles found")
 		return nil, nil
 	}
-	return role, errors.Wrap(err, "unable to scan row for SHOW DATABASES")
+	return role, errors.Wrap(err, "unable to scan row for SHOW ROLES")
 }
