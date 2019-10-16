@@ -134,7 +134,7 @@ type schema struct {
 	Owner         sql.NullString `db:"owner"`
 	Comment       sql.NullString `db:"comment"`
 	Options       sql.NullString `db:"options"`
-	RetentionTime sql.NullInt64  `db:"retention_time"`
+	RetentionTime sql.NullString `db:"retention_time"`
 }
 
 func (sc *client) ListDatabases() ([]database, error) {
