@@ -89,6 +89,9 @@ func (g *DatabaseGrantGenerator) InitResources() error {
 		}
 		allGrants = append(allGrants, grants...)
 	}
-	g.Resources = g.createResources(allGrants)
+	g.Resources, err = g.createResources(allGrants)
+	if err != nil {
+		return err
+	}
 	return nil
 }
