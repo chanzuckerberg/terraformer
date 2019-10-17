@@ -83,7 +83,10 @@ func (g *SchemaGrantGenerator) InitResources() error {
 
 	allGrants := []schemaGrant{}
 	for _, database := range databases {
-		fmt.Printf(database.DBName.String)
+		if database.Origin.String != "" {
+			// Provider does not support grants on imported databases yet
+			continue
+		}
 		schemas, err := db.ListSchemas(&database)
 		if err != nil {
 			return err

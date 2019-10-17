@@ -239,21 +239,14 @@ func (sc *client) ListWarehouses() ([]warehouse, error) {
 
 func (sc *client) ListSchemas(database *database) ([]schema, error) {
 	sdb := sqlx.NewDb(sc.db, "snowflake")
-	rows, err := sdb.Queryx("") //NEED TO INITALIZE THIS SOMEHOW
-	if database == nil {        // don't use database only for listing all schemas
-		stmt := "SHOW SCHEMAS"
-		fmt.Printf(stmt, "\n")
-		rows, err = sdb.Queryx(stmt)
-		if err != nil {
-			return nil, err
-		}
-	} else {
-		stmt := fmt.Sprintf(`SHOW SCHEMAS ON DATABASE "%v"`, database.DBName)
-		fmt.Printf(stmt, "\n")
-		rows, err = sdb.Queryx(stmt)
-		if err != nil {
-			return nil, err
-		}
+	stmt := "SHOW SCHEMAS"
+	if database != nil {
+		stmt = fmt.Sprintf(`%s IN DATABASE "%s"`, stmt, database.DBName.String)
+		fmt.Println(stmt)
+	}
+	rows, err := sdb.Queryx(stmt)
+	if err != nil {
+		return nil, err
 	}
 	defer rows.Close()
 
@@ -269,7 +262,7 @@ func (sc *client) ListSchemas(database *database) ([]schema, error) {
 func (sc *client) ListSchemaGrants(database database, schema schema) ([]schemaGrant, error) {
 	sdb := sqlx.NewDb(sc.db, "snowflake")
 	stmt := fmt.Sprintf(`SHOW GRANTS ON SCHEMA "%v"."%v"`, database.DBName.String, schema.Name.String)
-	fmt.Printf(stmt, "\n")
+	fmt.Println(stmt)
 	rows, err := sdb.Queryx(stmt)
 	if err != nil {
 		return nil, err
