@@ -32,7 +32,6 @@ func (g SchemaGenerator) createResources(schemaList []schema) []terraform_utils.
 			"snowflake_schema",
 			"snowflake",
 			[]string{}))
-		fmt.Println(fmt.Sprintf("%v|%v", schema.DatabaseName.String, schema.Name.String))
 	}
 	return resources
 }
