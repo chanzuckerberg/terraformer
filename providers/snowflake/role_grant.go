@@ -44,7 +44,7 @@ func (g RoleGrantGenerator) createResources(roleGrantList []roleGrant) []terrafo
 		case "SHARE":
 			tfGrant.Shares = append(tfGrant.Shares, grant.GranteeName.String)
 		default:
-			errors.New(fmt.Sprintf("[ERROR] New type of grant: %s", grant.GrantedTo.String))
+			errors.New(fmt.Sprintf("[ERROR] Unrecognized type of grant: %s", grant.GrantedTo.String))
 		}
 	}
 	var resources []terraform_utils.Resource

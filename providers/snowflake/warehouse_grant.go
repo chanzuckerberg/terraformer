@@ -45,7 +45,7 @@ func (g WarehouseGrantGenerator) createResources(warehouseGrantList []warehouseG
 		case "SHARE":
 			tfGrant.Shares = append(tfGrant.Shares, grant.GranteeName.String)
 		default:
-			errors.New(fmt.Sprintf("[ERROR] New type of grant: %s", grant.GrantedTo.String))
+			errors.New(fmt.Sprintf("[ERROR] Unrecognized type of grant: %s", grant.GrantedTo.String))
 		}
 
 	}
