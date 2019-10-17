@@ -239,15 +239,17 @@ func (sc *client) ListWarehouses() ([]warehouse, error) {
 
 func (sc *client) ListSchemas(database *database) ([]schema, error) {
 	sdb := sqlx.NewDb(sc.db, "snowflake")
-	rows, err := sdb.Queryx("")
-	if database == nil { // don't use database only for listing all schemas
+	rows, err := sdb.Queryx("") //NEED TO INITALIZE THIS SOMEHOW
+	if database == nil {        // don't use database only for listing all schemas
 		stmt := "SHOW SCHEMAS"
+		fmt.Printf(stmt, "\n")
 		rows, err = sdb.Queryx(stmt)
 		if err != nil {
 			return nil, err
 		}
 	} else {
 		stmt := fmt.Sprintf(`SHOW SCHEMAS ON DATABASE "%v"`, database.DBName)
+		fmt.Printf(stmt, "\n")
 		rows, err = sdb.Queryx(stmt)
 		if err != nil {
 			return nil, err

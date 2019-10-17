@@ -83,6 +83,7 @@ func (g *SchemaGrantGenerator) InitResources() error {
 
 	allGrants := []schemaGrant{}
 	for _, database := range databases {
+		fmt.Printf(database.DBName.String)
 		schemas, err := db.ListSchemas(&database)
 		if err != nil {
 			return err
