@@ -100,8 +100,5 @@ func (g *SchemaGrantGenerator) InitResources() error {
 		}
 	}
 	g.Resources, err = g.createResources(allGrants)
-	if err != nil {
-		return err
-	}
-	return nil
+	return err
 }
