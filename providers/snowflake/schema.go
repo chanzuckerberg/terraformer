@@ -27,13 +27,14 @@ func (g SchemaGenerator) createResources(schemaList []schema) []terraform_utils.
 	var resources []terraform_utils.Resource
 	for _, schema := range schemaList {
 		name := schema.Name.String
+		// These schemas are always managed by Snowflake, skip them
 		if name == "INFORMATION_SCHEMA" || name == "PUBLIC" {
 			continue
 		}
 		resources = append(resources, terraform_utils.NewSimpleResource(
 			// Schemas need to be namespaced by their database with two underscores
-			fmt.Sprintf("%v__%v", schema.DatabaseName.String, schema.Name.String),
-			fmt.Sprintf("%v__%v", schema.DatabaseName.String, schema.Name.String),
+			fmt.Sprintf("%s__%s", schema.DatabaseName.String, schema.Name.String),
+			fmt.Sprintf("%s__%s", schema.DatabaseName.String, schema.Name.String),
 			"snowflake_schema",
 			"snowflake",
 			[]string{}))

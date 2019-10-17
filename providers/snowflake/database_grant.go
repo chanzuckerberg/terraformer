@@ -33,7 +33,7 @@ func (g DatabaseGrantGenerator) createResources(databaseGrantList []databaseGran
 	groupedResources := map[string]*tfGrant{}
 	for _, grant := range databaseGrantList {
 		// TODO(ad): Fix this csv delimited when fixed in the provider. We should use the same functionality.
-		id := fmt.Sprintf("%v|||%v", grant.Name.String, grant.Privilege.String)
+		id := fmt.Sprintf("%s|||%s", grant.Name.String, grant.Privilege.String)
 		_, ok := groupedResources[id]
 		if !ok {
 			groupedResources[id] = &tfGrant{
@@ -55,7 +55,7 @@ func (g DatabaseGrantGenerator) createResources(databaseGrantList []databaseGran
 	for id, grant := range groupedResources {
 		resources = append(resources, terraform_utils.NewResource(
 			id,
-			fmt.Sprintf("%v_%v", grant.DB, grant.Privilege),
+			fmt.Sprintf("%s_%s", grant.DB, grant.Privilege),
 			"snowflake_database_grant",
 			"snowflake",
 			map[string]string{

@@ -179,7 +179,7 @@ func (sc *client) ListDatabases() ([]database, error) {
 
 func (sc *client) ListDatabaseGrants(database database) ([]databaseGrant, error) {
 	sdb := sqlx.NewDb(sc.db, "snowflake")
-	stmt := fmt.Sprintf(`SHOW GRANTS ON DATABASE "%v"`, database.DBName.String)
+	stmt := fmt.Sprintf(`SHOW GRANTS ON DATABASE "%s"`, database.DBName.String)
 	rows, err := sdb.Queryx(stmt)
 	if err != nil {
 		return nil, err
@@ -288,7 +288,7 @@ func (sc *client) ListSchemaGrants(database database, schema schema) ([]schemaGr
 
 func (sc *client) ListRoleGrants(role role) ([]roleGrant, error) {
 	sdb := sqlx.NewDb(sc.db, "snowflake")
-	stmt := fmt.Sprintf(`SHOW GRANTS ON ROLE "%v"`, role.Name.String)
+	stmt := fmt.Sprintf(`SHOW GRANTS ON ROLE "%s"`, role.Name.String)
 	rows, err := sdb.Queryx(stmt)
 	if err != nil {
 		return nil, err

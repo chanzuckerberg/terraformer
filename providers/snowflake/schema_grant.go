@@ -36,7 +36,7 @@ func (g SchemaGrantGenerator) createResources(schemaGrantList []schemaGrant) []t
 		// TODO(ad): Fix this csv delimited when fixed in the provider. We should use the same functionality.
 		DB := strings.Split(grant.Name.String, ".")[0]
 		Schema := strings.Split(grant.Name.String, ".")[1]
-		id := fmt.Sprintf("%v|%v||%v", DB, Schema, grant.Privilege.String)
+		id := fmt.Sprintf("%s|%s||%s", DB, Schema, grant.Privilege.String)
 		_, ok := groupedResources[id]
 		if !ok {
 			groupedResources[id] = &tfGrant{
@@ -58,7 +58,7 @@ func (g SchemaGrantGenerator) createResources(schemaGrantList []schemaGrant) []t
 	for id, grant := range groupedResources {
 		resources = append(resources, terraform_utils.NewResource(
 			id,
-			fmt.Sprintf("%v_%v", grant.Schema, grant.Privilege),
+			fmt.Sprintf("%s_%s", grant.Schema, grant.Privilege),
 			"snowflake_schema_grant",
 			"snowflake",
 			map[string]string{
