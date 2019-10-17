@@ -289,7 +289,6 @@ func (sc *client) ListSchemaGrants(database database, schema schema) ([]schemaGr
 func (sc *client) ListRoleGrants(role role) ([]roleGrant, error) {
 	sdb := sqlx.NewDb(sc.db, "snowflake")
 	stmt := fmt.Sprintf(`SHOW GRANTS ON ROLE "%v"`, role.Name.String)
-	fmt.Println(stmt)
 	rows, err := sdb.Queryx(stmt)
 	if err != nil {
 		return nil, err

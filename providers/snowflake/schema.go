@@ -26,6 +26,10 @@ type SchemaGenerator struct {
 func (g SchemaGenerator) createResources(schemaList []schema) []terraform_utils.Resource {
 	var resources []terraform_utils.Resource
 	for _, schema := range schemaList {
+		name := schema.Name.String
+		if name == "INFORMATION_SCHEMA" || name == "PUBLIC" || name == "MAILCHIMP" || name == "MANDRILL" || name == "DEV_SCHEMA" || name == "SEGMENT" {
+			continue
+		}
 		resources = append(resources, terraform_utils.NewSimpleResource(
 			fmt.Sprintf("%v|%v", schema.DatabaseName.String, schema.Name.String),
 			schema.Name.String,

@@ -35,8 +35,8 @@ func (g SchemaGrantGenerator) createResources(schemaGrantList []schemaGrant) []t
 	for _, grant := range schemaGrantList {
 		// TODO(ad): Fix this csv delimited when fixed in the provider. We should use the same functionality.
 		DB := strings.Split(grant.Name.String, ".")[0]
-		Sc := strings.Split(grant.Name.String, ".")[1]
-		id := fmt.Sprintf("%v|%v||%v", DB, Sc, grant.Privilege.String)
+		Schema := strings.Split(grant.Name.String, ".")[1]
+		id := fmt.Sprintf("%v|%v||%v", DB, Schema, grant.Privilege.String)
 		_, ok := groupedResources[id]
 		if !ok {
 			groupedResources[id] = &tfGrant{
