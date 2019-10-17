@@ -29,6 +29,13 @@ type client struct {
 	Name string
 }
 
+type TfGrant struct {
+	Name      string
+	Privilege string
+	Roles     []string
+	Shares    []string
+}
+
 type database struct {
 	CreatedOn     sql.NullString `db:"created_on"`
 	DBName        sql.NullString `db:"name"`

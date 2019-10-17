@@ -17,6 +17,7 @@ import (
 	"fmt"
 
 	"github.com/GoogleCloudPlatform/terraformer/terraform_utils"
+	"github.com/pkg/errors"
 )
 
 type RoleGrantGenerator struct {
@@ -24,37 +25,33 @@ type RoleGrantGenerator struct {
 }
 
 func (g RoleGrantGenerator) createResources(roleGrantList []roleGrant) []terraform_utils.Resource {
-	type tfGrant struct {
-		Role      string
-		Privilege string
-		Roles     []string
-		Shares    []string
-	}
-	groupedResources := map[string]*tfGrant{}
+	groupedResources := map[string]*TfGrant{}
 	for _, grant := range roleGrantList {
 		id := grant.Name.String
 		_, ok := groupedResources[id]
 		if !ok {
-			groupedResources[id] = &tfGrant{
-				Role:      grant.Name.String,
+			groupedResources[id] = &TfGrant{
+				Name:      grant.Name.String,
 				Privilege: grant.Privilege.String,
 				Roles:     []string{},
 				Shares:    []string{},
 			}
 		}
 		tfGrant := groupedResources[id]
-		if grant.GrantedTo.String == "ROLE" {
+		switch grant.GrantedTo.String {
+		case "ROLE":
 			tfGrant.Roles = append(tfGrant.Roles, grant.GranteeName.String)
-		}
-		if grant.GrantedTo.String == "SHARE" {
+		case "SHARE":
 			tfGrant.Shares = append(tfGrant.Shares, grant.GranteeName.String)
+		default:
+			errors.New(fmt.Sprintf("[ERROR] New type of grant: %s", grant.GrantedTo.String))
 		}
 	}
 	var resources []terraform_utils.Resource
 	for id, grant := range groupedResources {
 		resources = append(resources, terraform_utils.NewResource(
 			id,
-			fmt.Sprintf("%s_%s", grant.Role, grant.Privilege),
+			fmt.Sprintf("%s_%s", grant.Name, grant.Privilege),
 			"snowflake_role_grants",
 			"snowflake",
 			map[string]string{

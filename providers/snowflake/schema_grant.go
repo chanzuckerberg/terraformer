@@ -18,6 +18,7 @@ import (
 	"strings"
 
 	"github.com/GoogleCloudPlatform/terraformer/terraform_utils"
+	"github.com/pkg/errors"
 )
 
 type SchemaGrantGenerator struct {
@@ -25,13 +26,7 @@ type SchemaGrantGenerator struct {
 }
 
 func (g SchemaGrantGenerator) createResources(schemaGrantList []schemaGrant) []terraform_utils.Resource {
-	type tfGrant struct {
-		Schema    string
-		Privilege string
-		Roles     []string
-		Shares    []string
-	}
-	groupedResources := map[string]*tfGrant{}
+	groupedResources := map[string]*TfGrant{}
 	for _, grant := range schemaGrantList {
 		// TODO(ad): Fix this csv delimited when fixed in the provider. We should use the same functionality.
 		DB := strings.Split(grant.Name.String, ".")[0]
@@ -39,26 +34,28 @@ func (g SchemaGrantGenerator) createResources(schemaGrantList []schemaGrant) []t
 		id := fmt.Sprintf("%s|%s||%s", DB, Schema, grant.Privilege.String)
 		_, ok := groupedResources[id]
 		if !ok {
-			groupedResources[id] = &tfGrant{
-				Schema:    grant.Name.String,
+			groupedResources[id] = &TfGrant{
+				Name:      grant.Name.String,
 				Privilege: grant.Privilege.String,
 				Roles:     []string{},
 				Shares:    []string{},
 			}
 		}
 		tfGrant := groupedResources[id]
-		if grant.GrantedTo.String == "ROLE" {
+		switch grant.GrantedTo.String {
+		case "ROLE":
 			tfGrant.Roles = append(tfGrant.Roles, grant.GranteeName.String)
-		}
-		if grant.GrantedTo.String == "SHARE" {
+		case "SHARE":
 			tfGrant.Shares = append(tfGrant.Shares, grant.GranteeName.String)
+		default:
+			errors.New(fmt.Sprintf("[ERROR] New type of grant: %s", grant.GrantedTo.String))
 		}
 	}
 	var resources []terraform_utils.Resource
 	for id, grant := range groupedResources {
 		resources = append(resources, terraform_utils.NewResource(
 			id,
-			fmt.Sprintf("%s_%s", grant.Schema, grant.Privilege),
+			fmt.Sprintf("%s_%s", grant.Name, grant.Privilege),
 			"snowflake_schema_grant",
 			"snowflake",
 			map[string]string{
