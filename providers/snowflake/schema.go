@@ -14,6 +14,8 @@
 package snowflake
 
 import (
+	"fmt"
+
 	"github.com/GoogleCloudPlatform/terraformer/terraform_utils"
 )
 
@@ -25,11 +27,12 @@ func (g SchemaGenerator) createResources(schemaList []schema) []terraform_utils.
 	var resources []terraform_utils.Resource
 	for _, schema := range schemaList {
 		resources = append(resources, terraform_utils.NewSimpleResource(
-			schema.Name.String,
+			fmt.Sprintf("%v|%v", schema.DatabaseName.String, schema.Name.String),
 			schema.Name.String,
 			"snowflake_schema",
 			"snowflake",
 			[]string{}))
+		fmt.Println(fmt.Sprintf("%v|%v", schema.DatabaseName.String, schema.Name.String))
 	}
 	return resources
 }

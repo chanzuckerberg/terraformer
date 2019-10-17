@@ -15,6 +15,7 @@ package snowflake
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/GoogleCloudPlatform/terraformer/terraform_utils"
 )
@@ -33,7 +34,9 @@ func (g SchemaGrantGenerator) createResources(schemaGrantList []schemaGrant) []t
 	groupedResources := map[string]*tfGrant{}
 	for _, grant := range schemaGrantList {
 		// TODO(ad): Fix this csv delimited when fixed in the provider. We should use the same functionality.
-		id := fmt.Sprintf("%v|||%v", grant.Name.String, grant.Privilege.String)
+		DB := strings.Split(grant.Name.String, ".")[0]
+		Sc := strings.Split(grant.Name.String, ".")[1]
+		id := fmt.Sprintf("%v|%v||%v", DB, Sc, grant.Privilege.String)
 		_, ok := groupedResources[id]
 		if !ok {
 			groupedResources[id] = &tfGrant{

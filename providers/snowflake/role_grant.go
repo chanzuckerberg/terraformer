@@ -33,7 +33,7 @@ func (g RoleGrantGenerator) createResources(roleGrantList []roleGrant) []terrafo
 	groupedResources := map[string]*tfGrant{}
 	for _, grant := range roleGrantList {
 		// TODO(ad): Fix this csv delimited when fixed in the provider. We should use the same functionality.
-		id := fmt.Sprintf("%v|||%v", grant.Name.String, grant.Privilege.String)
+		id := grant.Name.String
 		_, ok := groupedResources[id]
 		if !ok {
 			groupedResources[id] = &tfGrant{
