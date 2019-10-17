@@ -25,7 +25,7 @@ type SchemaGrantGenerator struct {
 	SnowflakeService
 }
 
-func (g SchemaGrantGenerator) createResources(schemaGrantList []schemaGrant) []terraform_utils.Resource {
+func (g SchemaGrantGenerator) createResources(schemaGrantList []schemaGrant) ([]terraform_utils.Resource, error) {
 	groupedResources := map[string]*TfGrant{}
 	for _, grant := range schemaGrantList {
 		// TODO(ad): Fix this csv delimited when fixed in the provider. We should use the same functionality.
@@ -48,7 +48,7 @@ func (g SchemaGrantGenerator) createResources(schemaGrantList []schemaGrant) []t
 		case "SHARE":
 			tfGrant.Shares = append(tfGrant.Shares, grant.GranteeName.String)
 		default:
-			errors.New(fmt.Sprintf("[ERROR] Unrecognized type of grant: %s", grant.GrantedTo.String))
+			return nil, errors.New(fmt.Sprintf("[ERROR] Unrecognized type of grant: %s", grant.GrantedTo.String))
 		}
 	}
 	var resources []terraform_utils.Resource
@@ -68,7 +68,7 @@ func (g SchemaGrantGenerator) createResources(schemaGrantList []schemaGrant) []t
 			},
 		))
 	}
-	return resources
+	return resources, nil
 }
 
 func (g *SchemaGrantGenerator) InitResources() error {

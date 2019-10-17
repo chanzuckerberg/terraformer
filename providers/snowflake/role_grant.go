@@ -24,7 +24,7 @@ type RoleGrantGenerator struct {
 	SnowflakeService
 }
 
-func (g RoleGrantGenerator) createResources(roleGrantList []roleGrant) []terraform_utils.Resource {
+func (g RoleGrantGenerator) createResources(roleGrantList []roleGrant) ([]terraform_utils.Resource, error) {
 	groupedResources := map[string]*TfGrant{}
 	for _, grant := range roleGrantList {
 		id := grant.Name.String
@@ -44,7 +44,7 @@ func (g RoleGrantGenerator) createResources(roleGrantList []roleGrant) []terrafo
 		case "SHARE":
 			tfGrant.Shares = append(tfGrant.Shares, grant.GranteeName.String)
 		default:
-			return errors.New(fmt.Sprintf("[ERROR] Unrecognized type of grant: %s", grant.GrantedTo.String))
+			return nil, errors.New(fmt.Sprintf("[ERROR] Unrecognized type of grant: %s", grant.GrantedTo.String))
 		}
 	}
 	var resources []terraform_utils.Resource
@@ -64,7 +64,7 @@ func (g RoleGrantGenerator) createResources(roleGrantList []roleGrant) []terrafo
 			},
 		))
 	}
-	return resources
+	return resources, nil
 }
 
 func (g *RoleGrantGenerator) InitResources() error {

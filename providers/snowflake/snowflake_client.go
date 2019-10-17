@@ -335,5 +335,5 @@ func (sc *client) ListWarehouseGrants(warehouse warehouse) ([]warehouseGrant, er
 		log.Printf("[DEBUG] no warehouse grants found")
 		return nil, nil
 	}
-	return warehouseGrants, errors.Wrap(err, "unable to scan row for SHOW GRANTS ON ROLE")
+	return warehouseGrants, errors.Wrap(err, "unable to scan row for SHOW GRANTS ON WAREHOUSE")
 }

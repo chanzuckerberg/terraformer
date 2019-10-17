@@ -24,7 +24,7 @@ type WarehouseGrantGenerator struct {
 	SnowflakeService
 }
 
-func (g WarehouseGrantGenerator) createResources(warehouseGrantList []warehouseGrant) []terraform_utils.Resource {
+func (g WarehouseGrantGenerator) createResources(warehouseGrantList []warehouseGrant) ([]terraform_utils.Resource, error) {
 	groupedResources := map[string]*TfGrant{}
 	for _, grant := range warehouseGrantList {
 		// TODO(ad): Fix this csv delimited when fixed in the provider. We should use the same functionality.
@@ -45,7 +45,7 @@ func (g WarehouseGrantGenerator) createResources(warehouseGrantList []warehouseG
 		case "SHARE":
 			tfGrant.Shares = append(tfGrant.Shares, grant.GranteeName.String)
 		default:
-			errors.New(fmt.Sprintf("[ERROR] Unrecognized type of grant: %s", grant.GrantedTo.String))
+			return nil, errors.New(fmt.Sprintf("[ERROR] Unrecognized type of grant: %s", grant.GrantedTo.String))
 		}
 
 	}
@@ -66,7 +66,7 @@ func (g WarehouseGrantGenerator) createResources(warehouseGrantList []warehouseG
 			},
 		))
 	}
-	return resources
+	return resources, nil
 }
 
 func (g *WarehouseGrantGenerator) InitResources() error {
