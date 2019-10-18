@@ -28,7 +28,7 @@ func (g ViewGenerator) createResources(viewList []view) []terraform_utils.Resour
 	for _, view := range viewList {
 		resources = append(resources, terraform_utils.NewSimpleResource(
 			fmt.Sprintf("%s|%s|%s", view.DatabaseName.String, view.SchemaName.String, view.Name.String),
-			fmt.Sprintf("%s|%s|%s", view.DatabaseName.String, view.SchemaName.String, view.Name.String),
+			fmt.Sprintf("%s__%s__%s", view.DatabaseName.String, view.SchemaName.String, view.Name.String),
 			"snowflake_view",
 			"snowflake",
 			[]string{}))
