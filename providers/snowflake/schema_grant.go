@@ -42,7 +42,7 @@ var ValidSchemaPrivileges = []string{
 	"CREATE PROCEDURE",
 }
 
-func s(a []string, x string) bool {
+func stringContains(a []string, x string) bool {
 	for _, n := range a {
 		if x == n {
 			return true
@@ -56,7 +56,7 @@ func (g SchemaGrantGenerator) createResources(schemaGrantList []schemaGrant) ([]
 	for _, grant := range schemaGrantList {
 		// TODO(ad): Fix this csv delimited when fixed in the provider. We should use the same functionality.
 		// Valid Schema Privilege check
-		if !s(ValidSchemaPrivileges, grant.Privilege.String) {
+		if !stringContains(ValidSchemaPrivileges, grant.Privilege.String) {
 			continue
 		}
 		DB := strings.Split(grant.Name.String, ".")[0]
@@ -80,9 +80,6 @@ func (g SchemaGrantGenerator) createResources(schemaGrantList []schemaGrant) ([]
 	}
 	var resources []terraform_utils.Resource
 	for id, grant := range groupedResources {
-		if !s(ValidSchemaPrivileges, grant.Privilege) {
-			continue
-		}
 		resources = append(resources, terraform_utils.NewResource(
 			id,
 			fmt.Sprintf("%s_%s", grant.Name, grant.Privilege),
