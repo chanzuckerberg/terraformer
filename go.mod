@@ -6,8 +6,7 @@ require (
 	cloud.google.com/go v0.45.1
 	cloud.google.com/go/logging v1.0.0
 	github.com/aws/aws-sdk-go v1.22.0
-	//github.com/chanzuckerberg/terraform-provider-snowflake v0.4.1
-	github.com/chanzuckerberg/terraform-provider-snowflake v0.0.0-20191022183031-ed078bfde526
+	github.com/chanzuckerberg/terraform-provider-snowflake v0.4.1
 	github.com/cloudflare/cloudflare-go v0.9.4
 	github.com/coreos/go-systemd v0.0.0-20181031085051-9002847aa142 // indirect
 	github.com/davecgh/go-spew v1.1.1
@@ -53,7 +52,6 @@ require (
 	golang.org/x/oauth2 v0.0.0-20190604053449-0f29369cfe45
 	google.golang.org/api v0.9.0
 	google.golang.org/genproto v0.0.0-20190819201941-24fa4b261c55
-	gopkg.in/inf.v0 v0.9.1 // indirect
 	gopkg.in/resty.v0 v0.4.1 // indirect
 	k8s.io/api v0.0.0-20190116205037-c89978d5f86d // indirect
 	k8s.io/apimachinery v0.0.0-20190116203031-d49e237a2683

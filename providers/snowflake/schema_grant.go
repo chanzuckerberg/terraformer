@@ -18,7 +18,6 @@ import (
 	"strings"
 
 	"github.com/GoogleCloudPlatform/terraformer/terraform_utils"
-	"github.com/chanzuckerberg/terraform-provider-snowflake/pkg/resources"
 	"github.com/pkg/errors"
 )
 
@@ -26,7 +25,24 @@ type SchemaGrantGenerator struct {
 	SnowflakeService
 }
 
-func stringIsIn(a []string, x string) bool {
+var ValidSchemaPrivileges = []string{
+	"MODIFY",
+	"MONITOR",
+	"OWNERSHIP",
+	"USAGE",
+	"CREATE TABLE",
+	"CREATE VIEW",
+	"CREATE FILE FORMAT",
+	"CREATE STAGE",
+	"CREATE PIPE",
+	"CREATE STREAM",
+	"CREATE TASK",
+	"CREATE SEQUENCE",
+	"CREATE FUNCTION",
+	"CREATE PROCEDURE",
+}
+
+func s(a []string, x string) bool {
 	for _, n := range a {
 		if x == n {
 			return true
@@ -40,7 +56,7 @@ func (g SchemaGrantGenerator) createResources(schemaGrantList []schemaGrant) ([]
 	for _, grant := range schemaGrantList {
 		// TODO(ad): Fix this csv delimited when fixed in the provider. We should use the same functionality.
 		// Valid Schema Privilege check
-		if !stringIsIn(resources.ValidSchemaPrivileges, grant.Privilege.String) {
+		if !s(ValidSchemaPrivileges, grant.Privilege.String) {
 			continue
 		}
 		DB := strings.Split(grant.Name.String, ".")[0]
@@ -64,6 +80,9 @@ func (g SchemaGrantGenerator) createResources(schemaGrantList []schemaGrant) ([]
 	}
 	var resources []terraform_utils.Resource
 	for id, grant := range groupedResources {
+		if !s(ValidSchemaPrivileges, grant.Privilege) {
+			continue
+		}
 		resources = append(resources, terraform_utils.NewResource(
 			id,
 			fmt.Sprintf("%s_%s", grant.Name, grant.Privilege),
