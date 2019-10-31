@@ -141,17 +141,6 @@ func (g SchemaGrantGenerator) createResources(schemaGrantList []schemaGrant) ([]
 	}
 	var resources []terraform_utils.Resource
 
-	// var grantsToPrint []TfGrant
-	// for _, grant := range groupedResources {
-	// 	grantsToPrint = append(grantsToPrint, *grant)
-	// }
-	// sort.Slice(grantsToPrint, func(i, j int) bool {
-	// 	return grantsToPrint[i].Name < grantsToPrint[j].Name && grantsToPrint[i].Privilege < grantsToPrint[j].Privilege
-	// })
-	// for _, grant := range groupedResources {
-	// 	log.Printf("Name: %s, Privilege: %s, Roles: %#v\n", grant.Name, grant.Privilege, grant.Roles)
-	// }
-
 	for id, grant := range groupedResources {
 		DB := strings.Split(grant.Name, ".")[0]
 		Schema := strings.Split(grant.Name, ".")[1]
