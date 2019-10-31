@@ -16,7 +16,6 @@ package snowflake
 import (
 	"database/sql"
 	"fmt"
-	"log"
 	"sort"
 	"strings"
 
@@ -80,7 +79,6 @@ func (g SchemaGrantGenerator) filterALLGrants(schemaGrantList []schemaGrant) []s
 				continue
 			}
 			if _, ok := privs[p]; !ok {
-				log.Printf("deletedRole: %v missing %s has %v\n", databaseSchemaRole, p, privs)
 				delete(groupedByRole, databaseSchemaRole)
 				break
 			}
@@ -142,16 +140,17 @@ func (g SchemaGrantGenerator) createResources(schemaGrantList []schemaGrant) ([]
 		}
 	}
 	var resources []terraform_utils.Resource
-	var grantsToPrint []TfGrant
-	for _, grant := range groupedResources {
-		grantsToPrint = append(grantsToPrint, *grant)
-	}
-	sort.Slice(grantsToPrint, func(i, j int) bool {
-		return grantsToPrint[i].Name < grantsToPrint[j].Name && grantsToPrint[i].Privilege < grantsToPrint[j].Privilege
-	})
-	for _, grant := range groupedResources {
-		log.Printf("Name: %s, Privilege: %s, Roles: %#v\n", grant.Name, grant.Privilege, grant.Roles)
-	}
+
+	// var grantsToPrint []TfGrant
+	// for _, grant := range groupedResources {
+	// 	grantsToPrint = append(grantsToPrint, *grant)
+	// }
+	// sort.Slice(grantsToPrint, func(i, j int) bool {
+	// 	return grantsToPrint[i].Name < grantsToPrint[j].Name && grantsToPrint[i].Privilege < grantsToPrint[j].Privilege
+	// })
+	// for _, grant := range groupedResources {
+	// 	log.Printf("Name: %s, Privilege: %s, Roles: %#v\n", grant.Name, grant.Privilege, grant.Roles)
+	// }
 
 	for id, grant := range groupedResources {
 		DB := strings.Split(grant.Name, ".")[0]
